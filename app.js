@@ -41,6 +41,32 @@
      *
      * @param e
      */
+
+    /**
+     * Function, that prevents browser to execute default actions,
+     * and setting dropEffect on 'copy'
+     *
+     * @param e
+     */
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect = 'copy';
+    }
+
+    /**
+     * Function, that allows to open thumb in the new window
+     *
+     */
+    function openInNewWindow() {
+        var windowWidth = window.outerWidth;
+        var windowHeight =  window.outerHeight;
+        var link = this.childNodes[0].getAttribute('src');
+        var title = this.childNodes[0].getAttribute('title');
+
+        window.open(link, title,'width=' + windowWidth + ',height=' + windowHeight);
+    }
+    
     function fileUpload(e) {
         /**
          * getting FileList object, filled with uploaded files
@@ -87,14 +113,22 @@
 
             /**
              * reader's onload function, which starts when
-             * image is uploaded. Thumbs are being created.
+             * image is uploaded. Thumbs are being created,
+             * and their click events are being set.
              */
             reader.onload = (function (file) {
                 return function (e) {
-                    var spanElement = '<span class="thumb-wrapper">';
-                    spanElement += '<a href="' + e.target.result + '"><img src="' + e.target.result + '" title="' + file.name + '" /></a></span>';
+                    var spanElement = document.createElement('span');
+                    var linkElement = document.createElement('a');
 
-                    thumbnailsGallery.innerHTML += spanElement;
+                    spanElement.setAttribute('class', 'thumb-wrapper');
+                    linkElement.setAttribute('class', 'thumb-link');
+                    linkElement.innerHTML = '<img src="' + e.target.result + '" title="' + file.name + '" />';
+
+                    spanElement.appendChild(linkElement);
+                    thumbnailsGallery.appendChild(spanElement);
+
+                    linkElement.addEventListener('click', openInNewWindow, false);
                 };
             })(file);
 
@@ -105,19 +139,6 @@
             reader.readAsDataURL(file);
         }
     }
-
-    /**
-     * Function, that prevents browser to execute default actions,
-     * and setting dropEffect on 'copy'
-     *
-     * @param e
-     */
-    function handleDragOver(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.dataTransfer.dropEffect = 'copy';
-    }
-
 
     /**
      * adding functions to events
