@@ -10,10 +10,10 @@ galleryModule = (function (itemsModule) {
      */
     function isFileSupported(supportedTypes, fileType) {
         return supportedTypes.reduce(function (isSupported, type) {
-            var regExp = new RegExp('image\/' + type, 'gi');
+            var regExp = new RegExp('image/' + type, 'i');
 
-            return (isSupported && ((fileType.match(regExp)) ? true : false));
-        }, true);
+            return (isSupported || ((fileType.match(regExp)) ? true : false));
+        }, false);
     }
 
     /**
@@ -64,7 +64,7 @@ galleryModule = (function (itemsModule) {
              * and creates list items and thumbs
              */
             for (; file = files[i]; i += 1) {
-                if (isFileSupported(galleryConfig.supportedFiles, file.type)) {
+                if (!isFileSupported(galleryConfig.supportedFiles, file.type)) {
                     alert('You have uploaded unsupported file!');
                     continue;
                 }
