@@ -9,17 +9,18 @@
 <body>
     <div class="main-page">
         <div class="sidebar">
-            <input type="file" id="fileSelector" multiple />
-            <div id="drop-area" class="drop-area">
+            <input type="file" class="file-selector" multiple />
+            <div class="drop-area">
                 <span class="drop-area-info">Drag&Drop image here!</span>
             </div>
-            <div id="list">
-                <ul id="list-items-wrapper"></ul>
-            </div>
+            <ul class="files-list"></ul>
         </div>
-        <div id="thumbnails-gallery" class="thumbnails-gallery"></div>
+        <div class="thumbnails-gallery"></div>
 
     </div>
+    <script src="config.js"></script>
+    <script src="items.js"></script>
+    <script src="gallery.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
