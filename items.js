@@ -5,13 +5,13 @@ itemsModule = (function () {
      * Function, that allows to open thumb in the new window
      *
      */
-    function openInNewWindow() {
+    function openInNewWindow(link) {
         var windowWidth = window.outerWidth;
-        var windowHeight =  window.outerHeight;
-        var link = this.childNodes[0].getAttribute('src');
-        var title = this.childNodes[0].getAttribute('title');
+        var windowHeight = window.outerHeight;
 
-        window.open(link, title,'width=' + windowWidth + ',height=' + windowHeight);
+        return function () {
+            window.open(link, 'thumb-preview', 'width=' + windowWidth + ',height=' + windowHeight);
+        }
     }
 
     /**
@@ -37,23 +37,37 @@ itemsModule = (function () {
      * image is uploaded. Thumbs are being created,
      * and their click events are being set.
      *
-     * @param fileName
      * @param gallery
+     * @param thumbWidth
+     * @param thumbHeight
      * @returns {Function}
      */
-    function createThumb(fileName, gallery) {
+    function createThumb(gallery, thumbWidth, thumbHeight) {
         return function (e) {
             var spanElement = document.createElement('span');
             var linkElement = document.createElement('a');
+            var canvasElement = document.createElement('canvas');
+            var context = canvasElement.getContext('2d');
+            var image = new Image();
 
             spanElement.setAttribute('class', 'thumb-wrapper');
             linkElement.setAttribute('class', 'thumb-link');
-            linkElement.innerHTML = '<img src="' + e.target.result + '" title="' + fileName + '" />';
 
+            canvasElement.width = thumbWidth;
+            canvasElement.height = thumbHeight;
+
+            image.src = this.result;
+            if (image.width < image.height) {
+                context.drawImage(image, 0, 0, thumbWidth, (image.height / (image.width / 150)));
+            } else {
+                context.drawImage(image, 0, 0, (image.width / (image.height / 150)), thumbHeight);
+            }
+
+            linkElement.appendChild(canvasElement);
             spanElement.appendChild(linkElement);
             gallery.appendChild(spanElement);
 
-            linkElement.addEventListener('click', openInNewWindow, false);
+           linkElement.addEventListener('click', openInNewWindow(this.result), false);
         }
     }
 
